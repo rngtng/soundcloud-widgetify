@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <style type="text/css">
+      html, body {
+        /*overflow:hidden;*/
+      }
+      body {
+        background: transparent;
+        font-size: 13px;
+        font-family: arial, sans-serif;
+        color: #55688A;
+      }
+      .header {
+        margin: 0px 0px 3px 3px;
+      }
+      ul {
+        padding: 0;
+        margin: 0;
+      }
+      li {
+        list-style-type: none;
+        padding: 0 0 10px 0;
+        margin: 0;
+      }
+      a {
+        color: #55688A;
+        display: none;
+      }
+      </style>
+
+      <script src="http://code.jquery.com/jquery-1.7.2.min.js" type="text/javascript"></script>
+      <script src="sc-widgetify.js" type="text/javascript"></script>
+      <script type="text/javascript">
+      /**
+       * Google API Mocks to provide a offline example
+       */
+      var showMax = 1,
+      linePadding = 15,
+       google = {
+        contentmatch : {
+          getContentMatches : function() {
+            if( (urls = document.location.href.split(/urls=/)[1]) ) {
+              return urls.split(',');
+            }
+            return [];
+          }
+        }
+      },
+      gadgets = {
+        window : {
+          adjustHeight : function(height) {
+            console.log("Updated height to "+ height + "px");
+          }
+        }
+      },
+      updateHeight = function() {
+        var height = 0;
+        if( $('.header a:visible').length > 0 ) {
+          height += 15;
+        }
+        $('li[data-sc-url]:visible').map(function(i, e){
+          height += $(e).data('sc-height') + linePadding;
+        });
+        gadgets.window.adjustHeight(height);
+      };
+
+      jQuery(document).ready(function() {
+        $(document.body).scWidgetify(google.contentmatch.getContentMatches(),
+          { callback: function(element, result) {
+              var cnt = $('li[data-sc-url]').length;
+              if(cnt > showMax) {
+                element.hide();
+                $('.header a.show').html('Show ' + (cnt - showMax) + ' more').show();
+              }
+              updateHeight();
+            }
+          }
+        );
+
+        $('a').click( function() {
+          $('.header a').toggle()
+          $('li[data-sc-url]').slice(showMax).slideToggle("fast", updateHeight);
+        });
+      });
+    </script>
+  </head>
+  <body>
+
+    <div class="header">
+      <a href="#" class="show">Show more</a>
+      <a href="#">Hide</a>
+    </div>
+
+  </body>
+</html>
