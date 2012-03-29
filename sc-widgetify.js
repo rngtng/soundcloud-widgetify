@@ -1,15 +1,14 @@
 /*!
- * jQuery SoundCloud Widgetfy Plugin
+ * jQuery SoundCloud Widgetify Plugin
  * [https://github.com/rngtng/soundcloud-widgetify](https://github.com/rngtng/soundcloud-widgetify)
  *
  * Copyright 2012, SoundCloud Ltd., Tobias Bielohlawek
- * Licensed under the BSD license.
  *
  */
 (function($){
   var methods = {
     /**
-     * Main function, iterate over given paths and append a player for valid ones
+     * Main function, iterate over given urls and load & append a widget
      */
     init : function( matches, options ) {
       options = $.extend(true, {
@@ -30,6 +29,7 @@
         $.each(matches, function(index, url) {
           url = url.url || url;
 
+          // see http://developers.soundcloud.com/docs/oembed for more magic
           $.ajax({
             url: "http://soundcloud.com/oembed",
             dataType: 'jsonp',
