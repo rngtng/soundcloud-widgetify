@@ -1,4 +1,4 @@
-/*!
+/*
  * jQuery SoundCloud Widgetify Plugin
  * [https://github.com/rngtng/soundcloud-widgetify](https://github.com/rngtng/soundcloud-widgetify)
  *
@@ -19,9 +19,7 @@
        * Iterates over each collection element
        */
       return this.each(function() {
-        var $this = $(this),
-            list = {},
-            curHeight;
+        var $this = $(this);
 
         //add ul element if not present
         $root = $this.is('ul') ? $this : $('<ul />').appendTo($this);
