@@ -33,6 +33,7 @@
             url: (options.https ? "https:" : "http:") + "//soundcloud.com/oembed",
             dataType: options.dataType,
             method: 'POST',
+            maxheight: 305,
             iframe: true,
             data: {
               url: url,
