@@ -60,15 +60,16 @@
             success: function(result, status, xhr) {
               if( $root.find('li[data-sc-url="' + url + '"]').length == 0 ) { // don't add duplicate URLs
                 var iframe = result.html.replace(/https?/, options.https ? "https" : "http"),
-                  type = methods.urlType(iframe);
+                  type = methods.urlType(iframe),
+                  $node = null;
                 if( type == 'user' && options.resolveUser ||
                     type == 'track' && options.resolveTrack ||
                     type == 'playlist' && options.resolvePlaylist ||
                     type == 'group' && options.resolvePlaylist) {
                   $node = $('<li data-sc-url="' + url + '" data-sc-height="' + result.height + '">' + iframe + '</li>').appendTo($root);
-                  if( $.isFunction(options.callback) ) {
-                    options.callback($node, result);
-                  }
+                };
+                if( $.isFunction(options.callback) ) {
+                  options.callback($node, result);
                 }
               }
             },
