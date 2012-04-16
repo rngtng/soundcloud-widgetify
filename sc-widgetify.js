@@ -7,13 +7,30 @@
  */
 (function($){
   var methods = {
+    urlType : function(iframe) {
+      if (iframe.match(/groups%2F/g)) {
+        return 'group';
+      }
+      if (iframe.match(/playlists%2F/g)) {
+        return 'playlist';
+      }
+      if (iframe.match(/users%2F/g)) {
+        return 'user';
+      }
+      return 'track';
+    },
     /**
      * Main function, iterate over given urls and load & append a widget
      */
     init : function( matches, options ) {
       options = $.extend(true, {
         https: false,
-        dataType: 'jsonp'
+        dataType: 'jsonp',
+        showComments: true,
+        resolveUser: true,
+        resolveTrack: true,
+        resolvePlaylist: true,
+        resolveGroup: true,
       }, options);
 
       /**
@@ -33,18 +50,25 @@
             url: (options.https ? "https:" : "http:") + "//soundcloud.com/oembed",
             dataType: options.dataType,
             method: 'POST',
-            maxheight: 305,
-            iframe: true,
             data: {
               url: url,
               format: (options.dataType == 'jsonp') ? 'js' : 'json',
+              maxheight: 305,
+              iframe: true,
+              show_comments: options.showComments,
             },
             success: function(result, status, xhr) {
               if( $root.find('li[data-sc-url="' + url + '"]').length == 0 ) { // don't add duplicate URLs
-                var iframe = result.html.replace(/https?/, options.https ? "https" : "http");
-                $node = $('<li data-sc-url="' + url + '" data-sc-height="' + result.height + '">' + iframe + '</li>').appendTo($root);
-                if( $.isFunction(options.callback) ) {
-                  options.callback($node, result);
+                var iframe = result.html.replace(/https?/, options.https ? "https" : "http"),
+                  type = methods.urlType(iframe);
+                if( type == 'user' && options.resolveUser ||
+                    type == 'track' && options.resolveTrack ||
+                    type == 'playlist' && options.resolvePlaylist ||
+                    type == 'group' && options.resolvePlaylist) {
+                  $node = $('<li data-sc-url="' + url + '" data-sc-height="' + result.height + '">' + iframe + '</li>').appendTo($root);
+                  if( $.isFunction(options.callback) ) {
+                    options.callback($node, result);
+                  }
                 }
               }
             },
