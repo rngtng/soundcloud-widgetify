@@ -31,6 +31,8 @@
         resolveTrack: true,
         resolvePlaylist: true,
         resolveGroup: true,
+        iframe: true,
+        maxHeight: 305,
       }, options);
 
       /**
@@ -53,8 +55,8 @@
             data: {
               url: url,
               format: (options.dataType == 'jsonp') ? 'js' : 'json',
-              maxheight: 305,
-              iframe: true,
+              maxheight: options.maxHeight,
+              iframe: options.iframe,
               show_comments: options.showComments,
             },
             success: function(result, status, xhr) {
